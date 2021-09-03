@@ -38,8 +38,24 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'article'
+    'drf_spectacular',
+    'article',
+    'user'
 ]
+
+REST_FRAMEWORK = {
+    # YOUR SETTINGS
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Blog API',
+    'DESCRIPTION': ' 基于Django+Vue的blog系统',
+    'VERSION': '1.0.0',
+    'CONTACT': {"email": "1912315910@qq.com"},
+    'LICENSE': {"name": "MIT License"},
+    'SERVERS': [{"url": "http://127.0.0.1:8000"},],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
