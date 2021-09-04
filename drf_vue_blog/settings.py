@@ -39,13 +39,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'drf_spectacular',
+    'django_filters',
     'article',
-    'user'
+    'category',
+    'tag'
 ]
 
 REST_FRAMEWORK = {
     # YOUR SETTINGS
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 SPECTACULAR_SETTINGS = {
@@ -54,7 +59,7 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'CONTACT': {"email": "1912315910@qq.com"},
     'LICENSE': {"name": "MIT License"},
-    'SERVERS': [{"url": "http://127.0.0.1:8000"},],
+    'SERVERS': [{"url": "http://127.0.0.1:8000"}, ],
 }
 
 MIDDLEWARE = [
