@@ -6,6 +6,8 @@
 # @Description:
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
+from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_serializer
 
 
 class JsonResponse(Response):
@@ -14,6 +16,7 @@ class JsonResponse(Response):
     1.在视图类中的APIView中使用该JsonResponse返回响应数据
     2.ModelViewSet、Mixin下派生的APIView类、views.APIView都需要自己重写并返回JsonResponse格式的数据
     """
+
     def __init__(self, data=None, code=None, msg=None,
                  status=None,
                  template_name=None, headers=None,
@@ -36,3 +39,29 @@ class JsonResponse(Response):
         if headers:
             for name, value in headers.items():
                 self[name] = value
+
+
+def enveloper(serializer_class, list1):
+    """
+    统一接口响应体格式schema
+    """
+
+    @extend_schema_serializer(many=False)
+    class EnvelopeSerializer(serializers.Serializer):
+        def update(self, instance, validated_data):
+            super().update(instance, validated_data)
+
+        def create(self, validated_data):
+            super().create(validated_data)
+
+        code = serializers.IntegerField(read_only=True, help_text='业务状态码，20000为success；非20000为error')
+        message = serializers.CharField(read_only=True, help_text='业务提示消息')
+        data = serializer_class(read_only=True, many=list1, help_text='响应体数据')
+
+        class Meta:
+            ref_name = 'Enveloped{}{}'.format(
+                serializer_class.__name__.replace("Serializer", ""),
+                "List" if list1 else "",
+            )
+
+    return EnvelopeSerializer

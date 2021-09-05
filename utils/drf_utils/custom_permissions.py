@@ -8,7 +8,7 @@
 from rest_framework import permissions
 
 
-class IsAdminOrReadOnly(permissions.BasePermission):
+class IsSuperuserOrReadOnly(permissions.BasePermission):
     """
     仅管理员用户可进行修改
     其他用户仅可查看

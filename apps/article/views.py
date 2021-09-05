@@ -1,9 +1,13 @@
 from rest_framework import viewsets
-from rest_framework.response import Response
+from rest_framework import status
+from drf_spectacular.utils import extend_schema
 from django_filters import rest_framework as filters
+
+from utils.drf_utils.custom_json_response import JsonResponse
 from .models import Article
 from .serializers import ArticlesRetrieveDestroySerializer, ArticlesListSerializer, ArticlesCreateUpdateSerializer
-from utils.drf_utils.custom_permissions import IsAdminOrReadOnly
+from utils.drf_utils.custom_permissions import IsSuperuserOrReadOnly
+from utils.drf_utils.custom_json_response import enveloper
 
 
 class ArticleTitleFilter(filters.FilterSet):
@@ -18,9 +22,10 @@ class ArticleTitleFilter(filters.FilterSet):
 
 
 # Create your views here.
+@extend_schema(tags=['文章管理'])
 class ArticlesViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all().order_by('-create_time')
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsSuperuserOrReadOnly]
     # 使用自定义文章标题过滤器类类
     filterset_class = ArticleTitleFilter
 
@@ -34,18 +39,25 @@ class ArticlesViewSet(viewsets.ModelViewSet):
             return ArticlesCreateUpdateSerializer
         return ArticlesRetrieveDestroySerializer
 
+    @extend_schema(responses=enveloper(ArticlesCreateUpdateSerializer, False))
     def create(self, request, *args, **kwargs):
         """
         新建文章
         """
-        return super().create(request, *args, **kwargs)
+        res = super().create(request, *args, **kwargs)
+        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,
+                            headers=res.headers)
 
+    @extend_schema(responses=enveloper(ArticlesListSerializer, False))
     def list(self, request, *args, **kwargs):
         """
         获取文章列表
         """
-        return super().list(request, *args, **kwargs)
+        res = super().list(request, *args, **kwargs)
+        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,
+                            headers=res.headers)
 
+    @extend_schema(responses=enveloper(ArticlesRetrieveDestroySerializer, False))
     def retrieve(self, request, *args, **kwargs):
         """
         查看文章详情
@@ -56,20 +68,26 @@ class ArticlesViewSet(viewsets.ModelViewSet):
             # 如果当前请求的用户不是超级管理员则不返回body字段的原始markdown数据
             data = serializer.data
             data.pop('body')
-            return Response(data)
-        return Response(serializer.data)
+            return JsonResponse(data=data, msg='success', code=20000, status=status.HTTP_200_OK)
+        return JsonResponse(data=serializer.data, msg='success', code=20000, status=status.HTTP_200_OK)
 
+    @extend_schema(responses=enveloper(ArticlesCreateUpdateSerializer, False))
     def update(self, request, *args, **kwargs):
         """
         更新文章
         """
-        return super().update(request, *args, **kwargs)
+        res = super().update(request, *args, **kwargs)
+        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,
+                            headers=res.headers)
 
+    @extend_schema(responses=enveloper(ArticlesCreateUpdateSerializer, False))
     def partial_update(self, request, *args, **kwargs):
         """
         更新文章
         """
-        return super().partial_update(request, *args, **kwargs)
+        res = super().partial_update(request, *args, **kwargs)
+        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,
+                            headers=res.headers)
 
     def destroy(self, request, *args, **kwargs):
         """
