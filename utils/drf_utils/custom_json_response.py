@@ -56,7 +56,7 @@ def enveloper(serializer_class, list1):
 
         code = serializers.IntegerField(read_only=True, help_text='业务状态码，20000为success；非20000为error')
         message = serializers.CharField(read_only=True, help_text='业务提示消息')
-        data = serializer_class(read_only=True, many=list1, help_text='响应体数据')
+        data = serializer_class(read_only=True, many=list1, help_text='数据')
 
         class Meta:
             ref_name = 'Enveloped{}{}'.format(

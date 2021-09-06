@@ -23,10 +23,34 @@ class TagsViewSet(viewsets.ModelViewSet):
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,
                             headers=res.headers)
 
-    @extend_schema(responses=enveloper(TagsSerializer, False))
+    @extend_schema(responses=enveloper(TagsSerializer, True))
     def list(self, request, *args, **kwargs):
         """
         获取标签列表
+
+        `响应体数据格式以下方示例为准`
+        ```json
+        # 当响应状态码为200时(response_code = 200)
+        {
+          "code": 20000,
+          "message": "success",
+          "data": {
+            "count": 7,
+            "next": "http://127.0.0.1:8000/api/tags/?page=2&size=1",
+            "previous": null,
+            "results": [
+              {
+                "id": 7,
+                "create_time": "2021-09-06 04:02:46",
+                "update_time": "2021-09-06 04:02:46",
+                "name": "达芙妮副科级"
+              }
+            ],
+            "total_pages": 7,
+            "current_page": 1
+          }
+        }
+        ```
         """
         res = super().list(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,

@@ -48,10 +48,40 @@ class ArticlesViewSet(viewsets.ModelViewSet):
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,
                             headers=res.headers)
 
-    @extend_schema(responses=enveloper(ArticlesListSerializer, False))
+    @extend_schema(responses=enveloper(ArticlesListSerializer, True))
     def list(self, request, *args, **kwargs):
         """
         获取文章列表
+
+        `响应体数据格式以下方示例为准`
+        ```json
+        # 当响应状态码为200时(response_code = 200)
+        {
+          "code": 20000,
+          "message": "success",
+          "data": {
+            "count": 16,
+            "next": "http://127.0.0.1:8000/api/articles/?page=2&size=1",
+            "previous": null,
+            "results": [
+              {
+                "url": "http://127.0.0.1:8000/api/articles/18/",
+                "create_time": "2021-09-06 03:54:21",
+                "update_time": "2021-09-06 03:54:21",
+                "author": "admin",
+                "category_name": "FastAPI",
+                "tags": [
+                  "string111111111111111111"
+                ],
+                "title": "string1111111111111111",
+                "category": "http://127.0.0.1:8000/api/categories/2/"
+              }
+            ],
+            "total_pages": 16,
+            "current_page": 1
+          }
+        }
+        ```
         """
         res = super().list(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,

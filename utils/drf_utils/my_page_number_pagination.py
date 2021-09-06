@@ -36,6 +36,6 @@ class MyPageNumberPagination(PageNumberPagination):
         接口文档schema
         """
         schema_data = super().get_paginated_response_schema(schema)
-        schema_data['properties']['total_pages'] = {'type': 'integer', 'example': 20}
+        schema_data['properties']['total_pages'] = {'type': 'integer', 'example': 13}
         schema_data['properties']['current_page'] = {'type': 'integer', 'example': 1}
         return schema_data
