@@ -3,6 +3,7 @@ from markdown import Markdown
 from django.contrib.auth.models import User
 from category.models import Category
 from tag.models import Tag
+from avatar.models import Avatar
 from utils.django_utils.base_model import BaseModel
 
 
@@ -12,10 +13,12 @@ class Article(BaseModel):
     title = models.CharField(max_length=256, help_text='文章标题', verbose_name='文章标题')
     body = models.TextField(help_text='文章正文', verbose_name='文章正文')
     author = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者ID',
-                               related_name='articles')
+                               related_name='articles', help_text='作者ID')
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='分类ID',
-                                 related_name='articles')
-    tags = models.ManyToManyField(Tag, blank=True, verbose_name='文章标签', related_name='articles')
+                                 related_name='articles', help_text='分类ID')
+    avatar = models.ForeignKey(Avatar, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='文章标题背景图ID',
+                               related_name='articles', help_text='文章标题背景图ID')
+    tags = models.ManyToManyField(Tag, blank=True, verbose_name='文章标签', related_name='articles', help_text='文章标签')
 
     class Meta:
         db_table = 'article_info'

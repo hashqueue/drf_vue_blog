@@ -57,8 +57,7 @@ class CategoriesViewSet(viewsets.ModelViewSet):
         ```
         """
         res = super().list(request, *args, **kwargs)
-        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,
-                            headers=res.headers)
+        return JsonResponse(data=res.data, msg='success', code=20000)
 
     @extend_schema(responses=enveloper(CategoriesDetailSerializer, False))
     def retrieve(self, request, *args, **kwargs):
@@ -66,8 +65,7 @@ class CategoriesViewSet(viewsets.ModelViewSet):
         查看分类详情
         """
         res = super().retrieve(request, *args, **kwargs)
-        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,
-                            headers=res.headers)
+        return JsonResponse(data=res.data, msg='success', code=20000)
 
     @extend_schema(responses=enveloper(CategoriesSerializer, False))
     def update(self, request, *args, **kwargs):
@@ -75,17 +73,15 @@ class CategoriesViewSet(viewsets.ModelViewSet):
         更新分类
         """
         res = super().update(request, *args, **kwargs)
-        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,
-                            headers=res.headers)
+        return JsonResponse(data=res.data, msg='success', code=20000)
 
     @extend_schema(responses=enveloper(CategoriesSerializer, False))
     def partial_update(self, request, *args, **kwargs):
         """
         更新分类
         """
-        res = super().partial_update(request, *args, **kwargs)
-        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,
-                            headers=res.headers)
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         """

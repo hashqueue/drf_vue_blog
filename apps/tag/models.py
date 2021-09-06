@@ -6,7 +6,7 @@ from utils.django_utils.base_model import BaseModel
 
 
 class Tag(BaseModel):
-    name = models.CharField(max_length=128, verbose_name='标签名称')
+    name = models.CharField(max_length=128, verbose_name='标签名称', help_text='标签名称')
 
     class Meta:
         db_table = 'tag_info'

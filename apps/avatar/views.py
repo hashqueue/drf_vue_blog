@@ -1,32 +1,32 @@
 from rest_framework import viewsets
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
-from .models import Tag
+from .models import Avatar
 from utils.drf_utils.custom_permissions import IsSuperuserOrReadOnly
-from .serializers import TagsSerializer
+from .serializers import AvatarsSerializer
 from utils.drf_utils.custom_json_response import enveloper, JsonResponse
 
 
 # Create your views here.
-@extend_schema(tags=['标签管理'])
-class TagsViewSet(viewsets.ModelViewSet):
-    queryset = Tag.objects.all().order_by('-create_time')
+@extend_schema(tags=['文章标题背景图管理'])
+class AvatarsViewSet(viewsets.ModelViewSet):
+    queryset = Avatar.objects.all().order_by('-create_time')
     permission_classes = [IsSuperuserOrReadOnly]
-    serializer_class = TagsSerializer
+    serializer_class = AvatarsSerializer
 
-    @extend_schema(responses=enveloper(TagsSerializer, False))
+    @extend_schema(responses=enveloper(AvatarsSerializer, False))
     def create(self, request, *args, **kwargs):
         """
-        新建标签
+        新建文章标题背景图
         """
         res = super().create(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_201_CREATED,
                             headers=res.headers)
 
-    @extend_schema(responses=enveloper(TagsSerializer, True))
+    @extend_schema(responses=enveloper(AvatarsSerializer, True))
     def list(self, request, *args, **kwargs):
         """
-        获取标签列表
+        获取文章标题背景图列表
 
         `响应体数据格式以下方示例为准`
         ```json
@@ -35,18 +35,18 @@ class TagsViewSet(viewsets.ModelViewSet):
           "code": 20000,
           "message": "success",
           "data": {
-            "count": 7,
-            "next": "http://127.0.0.1:8000/api/tags/?page=2&size=1",
+            "count": 2,
+            "next": "http://127.0.0.1:8000/api/avatars/?page=2&size=1",
             "previous": null,
             "results": [
               {
-                "id": 7,
-                "create_time": "2021-09-06 04:02:46",
-                "update_time": "2021-09-06 04:02:46",
-                "name": "达芙妮副科级"
+                "id": 2,
+                "create_time": "2021-09-07 00:39:38",
+                "update_time": "2021-09-07 00:39:38",
+                "url": "https://cdn.jsdelivr.net/gh/hashqueue/blog-image-hosting@master/wallpapers/20210605145946.jpg"
               }
             ],
-            "total_pages": 7,
+            "total_pages": 2,
             "current_page": 1
           }
         }
@@ -55,32 +55,32 @@ class TagsViewSet(viewsets.ModelViewSet):
         res = super().list(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000)
 
-    @extend_schema(responses=enveloper(TagsSerializer, False))
+    @extend_schema(responses=enveloper(AvatarsSerializer, False))
     def retrieve(self, request, *args, **kwargs):
         """
-        查看标签详情
+        查看文章标题背景图详情
         """
         res = super().retrieve(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000)
 
-    @extend_schema(responses=enveloper(TagsSerializer, False))
+    @extend_schema(responses=enveloper(AvatarsSerializer, False))
     def update(self, request, *args, **kwargs):
         """
-        更新标签
+        更新文章标题背景图
         """
         res = super().update(request, *args, **kwargs)
         return JsonResponse(data=res.data, msg='success', code=20000)
 
-    @extend_schema(responses=enveloper(TagsSerializer, False))
+    @extend_schema(responses=enveloper(AvatarsSerializer, False))
     def partial_update(self, request, *args, **kwargs):
         """
-        更新标签
+        更新文章标题背景图
         """
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         """
-        删除标签
+        删除文章标题背景图
         """
         return super().destroy(request, *args, **kwargs)

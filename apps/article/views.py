@@ -67,14 +67,15 @@ class ArticlesViewSet(viewsets.ModelViewSet):
               {
                 "url": "http://127.0.0.1:8000/api/articles/18/",
                 "create_time": "2021-09-06 03:54:21",
-                "update_time": "2021-09-06 03:54:21",
+                "update_time": "2021-09-07 00:49:27",
                 "author": "admin",
                 "category_name": "FastAPI",
                 "tags": [
-                  "string111111111111111111"
+                  "string111111"
                 ],
                 "title": "string1111111111111111",
-                "category": "http://127.0.0.1:8000/api/categories/2/"
+                "category": "http://127.0.0.1:8000/api/categories/2/",
+                "avatar": "http://127.0.0.1:8000/api/avatars/1/"
               }
             ],
             "total_pages": 16,
@@ -84,8 +85,7 @@ class ArticlesViewSet(viewsets.ModelViewSet):
         ```
         """
         res = super().list(request, *args, **kwargs)
-        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,
-                            headers=res.headers)
+        return JsonResponse(data=res.data, msg='success', code=20000)
 
     @extend_schema(responses=enveloper(ArticlesRetrieveDestroySerializer, False))
     def retrieve(self, request, *args, **kwargs):
@@ -107,17 +107,15 @@ class ArticlesViewSet(viewsets.ModelViewSet):
         更新文章
         """
         res = super().update(request, *args, **kwargs)
-        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,
-                            headers=res.headers)
+        return JsonResponse(data=res.data, msg='success', code=20000)
 
     @extend_schema(responses=enveloper(ArticlesCreateUpdateSerializer, False))
     def partial_update(self, request, *args, **kwargs):
         """
         更新文章
         """
-        res = super().partial_update(request, *args, **kwargs)
-        return JsonResponse(data=res.data, msg='success', code=20000, status=status.HTTP_200_OK,
-                            headers=res.headers)
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         """
