@@ -20,7 +20,7 @@ class JsonResponse(Response):
     def __init__(self, data=None, code=None, msg=None,
                  status=None,
                  template_name=None, headers=None,
-                 exception=False, content_type=None, **kwargs):
+                 exception=False, content_type=None):
         super().__init__(None, status=status)
 
         if isinstance(data, Serializer):
@@ -31,7 +31,6 @@ class JsonResponse(Response):
             )
             raise AssertionError(msg)
         self.data = {'code': code, 'message': msg, 'data': data}
-        self.data.update(kwargs)
         self.template_name = template_name
         self.exception = exception
         self.content_type = content_type
@@ -54,8 +53,8 @@ def enveloper(serializer_class, list1):
         def create(self, validated_data):
             super().create(validated_data)
 
-        code = serializers.IntegerField(read_only=True, help_text='业务状态码，20000为success；非20000为error')
-        message = serializers.CharField(read_only=True, help_text='业务提示消息')
+        code = serializers.IntegerField(default=20000, read_only=True, help_text='业务状态码，20000为success；非20000为error')
+        message = serializers.CharField(default='success', read_only=True, help_text='业务提示消息')
         data = serializer_class(read_only=True, many=list1, help_text='数据')
 
         class Meta:

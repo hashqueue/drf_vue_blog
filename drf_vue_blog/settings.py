@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-hxbpi9pri-uq6yk2l9@sx(52f_ois7a-l*197k@js1=9in^n+m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -52,15 +52,16 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    # YOUR SETTINGS
+    # 指定后端的schema为drf_spectacular的schema，用来生成接口文档
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     # 在全局指定分页的引擎
     'DEFAULT_PAGINATION_CLASS': 'utils.drf_utils.my_page_number_pagination.MyPageNumberPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    # 使用JWT进行认证
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
+    # 全局配置自定义异常
+    'EXCEPTION_HANDLER': 'utils.drf_utils.custom_exception.custom_exception_handler',
 }
 
 # djangorestframework-simplejwt配置

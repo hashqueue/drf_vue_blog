@@ -29,3 +29,6 @@ urlpatterns = [
     path('api/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
+
+# 自定义 500服务器错误 响应体数据结构
+handler500 = 'utils.drf_utils.custom_server_error_500_handler.server_error'

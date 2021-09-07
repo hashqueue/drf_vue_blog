@@ -1,7 +1,6 @@
 """w created serializers.py at 2021/9/3 下午12:12"""
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UsersSerializer(serializers.ModelSerializer):
@@ -17,21 +16,12 @@ class UsersSerializer(serializers.ModelSerializer):
             }
         }
 
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
 
     def update(self, instance, validated_data):
-        super().update(instance, validated_data)
-
-    def create(self, validated_data):
-        super().create(validated_data)
-
-    def validate(self, attrs):
-        """
-        重写validate方法, 添加user_id字段
-        :param attrs:
-        :return:
-        """
-        data = super().validate(attrs)
-        data['user_id'] = self.user.id
-        return data
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+        return super().update(instance, validated_data)
